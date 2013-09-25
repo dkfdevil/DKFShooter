@@ -19,10 +19,17 @@ public class CameraHeadScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		//Get the maincamera
-		myCamera = Camera.main;
-		//Get our own CameraHead
-		cameraHeadTransform = transform.FindChild("CameraHead");
+		if(networkView.isMine == true)
+		{
+			//Get the maincamera
+			myCamera = Camera.main;
+			//Get our own CameraHead
+			cameraHeadTransform = transform.FindChild("CameraHead");
+		}
+		else
+		{
+			enabled = false;
+		}
 	}
 	
 	// Update is called once per frame

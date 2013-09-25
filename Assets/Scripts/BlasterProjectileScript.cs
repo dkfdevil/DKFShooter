@@ -5,6 +5,9 @@ using System.Collections;
 /// <summary>
 /// This script is attached to the blaster projectile
 /// and it handles the behavior of the projectile
+/// 
+/// This script is accesses by fireblasterscript to instantiate a new projecitle and give it a owner and team
+/// This script accesses the healthanddamagescript to inform it has been attacked
 /// </summary>
 
 
@@ -20,6 +23,11 @@ public class BlasterProjectileScript : MonoBehaviour {
 	private RaycastHit hit;
 	private float rayRange = 1.5f;
 	private float expireTime = 2;
+	
+	//Used for hit detection
+	
+	public string team;
+	public string myOwner;
 	
 	//Variables End
 
@@ -50,6 +58,35 @@ public class BlasterProjectileScript : MonoBehaviour {
 				//Make the projectile invisible
 				myTransform.renderer.enabled = false;
 			}
+			//If we collided with a player
+			if(hit.transform.tag == "BlueTeamCollider" || hit.transform.tag == "RedTeamCollider")
+			{
+				//Create a explosion effect
+				Instantiate(blasterProjectileExplosion, hit.point, Quaternion.identity);
+				
+				hasCollided = true;
+				
+				//Make the projectile invisible
+				myTransform.renderer.enabled = false;
+				
+				//Acces the healthanddamagescript of the enemy player
+				//and inform them that they have been attacked and by whom
+				if(hit.transform.tag == "BlueTeamCollider" && team == "red")
+				{
+					HealthandDamageScript healthAndDamageScript = hit.transform.GetComponent<HealthandDamageScript>();
+					healthAndDamageScript.iWasJustAttacked = true;
+					healthAndDamageScript.myAttacker = myOwner;
+					healthAndDamageScript.hitByBlaster = true;
+				}
+				if(hit.transform.tag == "RedTeamCollider" && team == "blue")
+				{
+					HealthandDamageScript healthAndDamageScript = hit.transform.GetComponent<HealthandDamageScript>();
+					healthAndDamageScript.iWasJustAttacked = true;
+					healthAndDamageScript.myAttacker = myOwner;
+					healthAndDamageScript.hitByBlaster = true;
+				}
+			}
+			
 		}
 	}
 	

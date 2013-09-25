@@ -176,8 +176,16 @@ private var tr : Transform;
 private var controller : CharacterController;
 
 function Awake () {
-	controller = GetComponent (CharacterController);
-	tr = transform;
+	if(networkView.isMine == true)
+	{
+		controller = GetComponent (CharacterController);
+		tr = transform;
+	}
+	else
+	{
+		enabled = false;
+	}
+
 }
 
 private function UpdateFunction () {
